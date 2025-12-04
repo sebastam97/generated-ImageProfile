@@ -2,7 +2,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { UploadedImage } from "../types";
 
-const MODEL_NAME = 'gemini-2.5-flash-preview-image';
+// Model for image generation - requires billing enabled
+const MODEL_NAME = 'gemini-2.5-flash-image';
 
 /**
  * Gets the API key from localStorage
@@ -54,6 +55,7 @@ export const generatePhoto = async (referenceImages: UploadedImage[]): Promise<s
         parts: [...imageParts, { text: prompt }],
       },
       config: {
+        responseModalities: ['Text', 'Image'],
         imageConfig: {
           aspectRatio: "1:1",
         }

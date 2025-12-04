@@ -75,7 +75,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
         <InfoBox>
           <InfoTitle>
             <Info size={16} />
-            Modelo requerido: <ModelBadge>gemini-2.5-flash-preview-image</ModelBadge>
+            Modelo requerido: <ModelBadge>gemini-2.5-flash-image</ModelBadge>
           </InfoTitle>
           <InfoText>
             Este modelo requiere tener <strong>facturación habilitada</strong> en Google Cloud. 
