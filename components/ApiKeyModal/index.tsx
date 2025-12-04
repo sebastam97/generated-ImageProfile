@@ -78,7 +78,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
             Modelo requerido: <ModelBadge>gemini-2.5-flash-image</ModelBadge>
           </InfoTitle>
           <InfoText>
-            Este modelo requiere tener <strong>facturación habilitada</strong> en Google Cloud. 
+            Para usar este modelo necesitas tener <strong>facturación habilitada</strong> en Google Cloud. 
             Google ofrece $300 USD de crédito gratis para nuevos usuarios.
           </InfoText>
           <InfoList>
