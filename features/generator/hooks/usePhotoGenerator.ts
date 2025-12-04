@@ -73,7 +73,15 @@ export const usePhotoGenerator = () => {
       setStatus(GeneratorStatus.SUCCESS);
     } catch (err: any) {
       setStatus(GeneratorStatus.ERROR);
-      setError(err.message || "Error al generar la imagen.");
+      
+      // Handle specific error messages
+      if (err.message === "API_KEY_MISSING") {
+        setError("Por favor configura tu API Key de Gemini primero.");
+      } else if (err.message?.includes("429") || err.message?.includes("quota")) {
+        setError("Has excedido el límite de uso. Intenta más tarde o verifica tu facturación en Google Cloud.");
+      } else {
+        setError(err.message || "Error al generar la imagen.");
+      }
     }
   }, [images]);
 

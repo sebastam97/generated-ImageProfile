@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MainLayout } from './components/layout/MainLayout';
 import { Button } from './components/ui/Button';
+import { ApiKeyModal } from './components/ApiKeyModal';
 import { usePhotoGenerator } from './features/generator/hooks/usePhotoGenerator';
 import { ReferenceUploader } from './features/generator/components/ReferenceUploader';
 import { ResultDisplay } from './features/generator/components/ResultDisplay';
-import { AlertCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, Sparkles, Key, Settings } from 'lucide-react';
 import { GeneratorStatus } from './features/generator/types';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { 
@@ -24,6 +25,9 @@ import {
 } from './styles/App.styles';
 
 const App: React.FC = () => {
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+
   const { 
     images, 
     status, 
@@ -35,6 +39,28 @@ const App: React.FC = () => {
     generate, 
     canGenerate 
   } = usePhotoGenerator();
+
+  // Check for existing API key on mount
+  useEffect(() => {
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) {
+      setApiKey(savedKey);
+    }
+  }, []);
+
+  const handleApiKeySave = (key: string) => {
+    setApiKey(key);
+    setShowApiKeyModal(false);
+  };
+
+  const handleChangeApiKey = () => {
+    setShowApiKeyModal(true);
+  };
+
+  const handleDeleteApiKey = () => {
+    localStorage.removeItem('gemini_api_key');
+    setApiKey(null);
+  };
 
   const handleDownload = () => {
     if (!resultUrl) return;
@@ -49,8 +75,47 @@ const App: React.FC = () => {
   return (
     <>
       <GlobalStyles />
+      
+      {/* API Key Modal - shows if no key is saved */}
+      <ApiKeyModal 
+        isOpen={!apiKey || showApiKeyModal}
+        onSave={handleApiKeySave}
+        onClose={() => setShowApiKeyModal(false)}
+        hasExistingKey={!!apiKey}
+      />
+
       <MainLayout>
         <HeroSection>
+          {/* API Key Status Badge */}
+          {apiKey && (
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: '0.5rem',
+              marginBottom: '1rem' 
+            }}>
+              <button
+                onClick={handleChangeApiKey}
+                style={{
+                  background: 'rgba(34, 197, 94, 0.1)',
+                  border: '1px solid rgba(34, 197, 94, 0.3)',
+                  borderRadius: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  color: '#4ade80',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <Key size={16} />
+                API Key configurada
+                <Settings size={14} />
+              </button>
+            </div>
+          )}
+          
           <MainTitle>
             Tu foto de perfil, <Highlight>profesionalizada</Highlight>
           </MainTitle>

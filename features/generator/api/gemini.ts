@@ -2,9 +2,18 @@
 import { GoogleGenAI } from "@google/genai";
 import { UploadedImage } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const MODEL_NAME = 'gemini-2.5-flash-preview-image';
 
-const MODEL_NAME = 'gemini-2.5-flash-image';
+/**
+ * Gets the API key from localStorage
+ */
+const getApiKey = (): string => {
+  const apiKey = localStorage.getItem('gemini_api_key');
+  if (!apiKey) {
+    throw new Error("API_KEY_MISSING");
+  }
+  return apiKey;
+};
 
 /**
  * Generates a professional photo using the Gemini API.
@@ -14,6 +23,9 @@ export const generatePhoto = async (referenceImages: UploadedImage[]): Promise<s
   if (!referenceImages.length) {
     throw new Error("No reference images provided");
   }
+
+  const apiKey = getApiKey();
+  const ai = new GoogleGenAI({ apiKey });
 
   const prompt = `
     Generate a photorealistic professional LinkedIn profile headshot based on the provided reference images.
